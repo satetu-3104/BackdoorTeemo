@@ -1,4 +1,4 @@
-import { SCROLL_SPEED, PLAYER_START_X, PLAYER_START_Y, GOAL_DISTANCE, MAX_TIME_MS, TRANSPARENT_DELAY_MS } from '../config/params.js';
+import { SCROLL_SPEED, GOAL_DISTANCE, MAX_TIME_MS, TRANSPARENT_DELAY_MS, getPlayerStartPosition } from '../config/params.js';
 import { createPlayer, updatePlayerAnimation, stopPlayerAnimation } from '../logic/player.js';
 import { spawnEnemy } from '../logic/enemy.js';
 
@@ -18,8 +18,6 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('player1', '/images/player1.png');
     this.load.image('player2', '/images/player2.png');
     this.load.image('player3', '/images/player3.png');
-    
-    
     this.load.image('enemy_back', '/images/enemy_back.png');
     this.load.image('enemy_front', '/images/enemy_front.png');
     this.load.image('enemy_left', '/images/enemy_left.png');
@@ -29,22 +27,26 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    const bgFrame = this.textures.get('background').getSourceImage();
-    const originalWidth = bgFrame.width;
-    const originalHeight = bgFrame.height;
-    
+
     this.moving = false;
     this.isWatching = false;
     this.gameOver = false;
     this.isTransparent = false;
     this.transparentTimer = null;
 
-    this.background = this.add.tileSprite(width / 2, height / 2, width, height, 'background');
-    this.background.setTileScale(width / originalWidth, height / originalHeight); 
+    this.background = this.add.tileSprite(width / 2, height / 2, width, height, 'background')
+    .setDepth(-1); // 背景は最背面;
 
-    this.player = createPlayer(this, PLAYER_START_X, PLAYER_START_Y);
+    // 背景画像のタイルスケール調整
+    const bgFrame = this.textures.get('background').getSourceImage();
+    const originalWidth = bgFrame.width;
+    const originalHeight = bgFrame.height;
+    this.background.setTileScale(width / originalWidth, height / originalHeight);
+    this.background.setDepth(-1);
 
-    // ✅ BGM再生は create() の中で即実行！
+    const { x: playerX, y: playerY } = getPlayerStartPosition(this);
+    this.player = createPlayer(this, playerX, playerY);
+
     this.bgm = this.sound.add('bgm', { loop: false });
     this.bgm.play();
 
@@ -72,11 +74,11 @@ export default class GameScene extends Phaser.Scene {
 
       this.transparentTimer = this.time.delayedCall(
         TRANSPARENT_DELAY_MS,
-          () => {
-            this.player.setAlpha(0.4);
-            this.isTransparent = true;
-          }
-        );
+        () => {
+          this.player.setAlpha(0.4);
+          this.isTransparent = true;
+        }
+      );
     });
 
     spawnEnemy(this, this.enemyDirection);
@@ -100,33 +102,32 @@ export default class GameScene extends Phaser.Scene {
     if (!this.gameOver && this.isWatching && !this.isTransparent) {
       this.gameOver = true;
       stopPlayerAnimation(this);
-    
+
       if (this.bgm && this.bgm.isPlaying) {
         this.bgm.stop();
-        this.bgm.destroy(); // ★追加！
+        this.bgm.destroy();
       }
-    
-        const score = Math.floor(this.background.tilePositionX);
-        this.scene.start('ResultScene', { result: 'GAME OVER', score });
+
+      const score = Math.floor(this.background.tilePositionX);
+      this.scene.start('ResultScene', { result: 'GAME OVER', score });
     }
 
     if (!this.gameOver && this.background.tilePositionX >= GOAL_DISTANCE) {
       this.gameOver = true;
       stopPlayerAnimation(this);
-    
+
       if (this.bgm && this.bgm.isPlaying) {
         this.bgm.stop();
-        this.bgm.destroy(); // ★追加！
+        this.bgm.destroy();
       }
-    
-        const elapsed = this.time.now; // 経過時間（ms）
-        const remaining = Math.max(0, MAX_TIME_MS - elapsed);
-        const distanceScore = Math.floor(this.background.tilePositionX);
-        const timeBonus = Math.floor(remaining); // 100msあたり1点
-        const score = distanceScore + timeBonus;
 
-        this.scene.start('ResultScene', { result: 'CLEAR!', score });
+      const elapsed = this.time.now;
+      const remaining = Math.max(0, MAX_TIME_MS - elapsed);
+      const distanceScore = Math.floor(this.background.tilePositionX);
+      const timeBonus = Math.floor(remaining);
+      const score = distanceScore + timeBonus;
+
+      this.scene.start('ResultScene', { result: 'CLEAR!', score });
     }
-    
   }
 }
