@@ -1,7 +1,16 @@
 export const SCROLL_SPEED = 5
-export const WATCH_TIME = 1400; // ミリ秒
+
+// 敵パラメータ
+export const WATCH_TIME = 2000;
 export const TURN_BACK_TIME = 1000;
-export const ENEMY_MOVE_DURATION = 1500;
+export const ENEMY_MOVE_DURATION = 3000;
+export const ENEMY_SPAWN_DELAY = 1000;
+// それぞれに個別の倍率幅
+export const WATCH_TIME_VARIANCE = [0.8, 1.5];
+export const TURN_BACK_TIME_VARIANCE = [0.5, 1.0];
+export const ENEMY_MOVE_DURATION_VARIANCE = [0.5, 2.0];
+export const ENEMY_SPAWN_DELAY_VARIANCE = [0.5, 3.0];
+
 export const PLAYER_START_X = 400
 export const PLAYER_START_Y = 500
 export const ENEMY_Y = 100
@@ -25,7 +34,7 @@ export const SYNOPSIS_TEXT = `
 `;
 
 // ✅ ランダム係数をかけて値を返すユーティリティ関数
-export function getRandomized(baseValue) {
-    const factor = Phaser.Math.FloatBetween(MIN_VARIANCE, MAX_VARIANCE);
-    return Math.floor(baseValue * factor);
-  }
+export function getRandomizedRange(base, minFactor, maxFactor) {
+    const factor = Phaser.Math.FloatBetween(minFactor, maxFactor);
+    return Math.floor(base * factor);
+}

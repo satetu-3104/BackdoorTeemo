@@ -20,24 +20,26 @@ export function spawnEnemy(scene, fromDirection) {
     onComplete: () => {
       scene.enemy.setTexture('enemy_back');
 
-      scene.time.delayedCall(getRandomized(TURN_BACK_TIME), () => {
+      scene.time.delayedCall(getRandomizedRange(TURN_BACK_TIME, ...TURN_BACK_TIME_VARIANCE), () => {
         scene.enemy.setTexture('enemy_front');
         scene.isWatching = true;
 
-        scene.time.delayedCall(getRandomized(WATCH_TIME), () => {
+        scene.time.delayedCall(getRandomizedRange(WATCH_TIME, ...WATCH_TIME_VARIANCE), () => {
           scene.isWatching = false;
           scene.enemy.setTexture(returnTexture);
 
           scene.tweens.add({
             targets: scene.enemy,
             x: returnX,
-            duration: getRandomized(ENEMY_MOVE_DURATION),
+            duration: getRandomizedRange(ENEMY_MOVE_DURATION, ...ENEMY_MOVE_DURATION_VARIANCE),
             onUpdate: () => {
               scene.enemy.setTexture(returnTexture);
             },
             onComplete: () => {
               scene.enemy.destroy();
-              spawnEnemy(scene, fromDirection === 'left' ? 'right' : 'left');
+              this.time.delayedCall(getSpawnDelay(), () => {
+                this.spawnEnemy(fromDirection === 'left' ? 'right' : 'left');
+              });
             }
           });
         });
