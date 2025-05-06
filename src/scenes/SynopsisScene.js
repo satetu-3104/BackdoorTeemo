@@ -7,7 +7,7 @@ export default class SynopsisScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background_synopsis', '/images/background_synopsis.png');
+    this.load.image('background_synopsis', import.meta.env.BASE_URL + 'images/background_synopsis.png');
   }
 
   create() {

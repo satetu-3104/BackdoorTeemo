@@ -14,15 +14,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', '/images/background.jpg');
-    this.load.image('player1', '/images/player1.png');
-    this.load.image('player2', '/images/player2.png');
-    this.load.image('player3', '/images/player3.png');
-    this.load.image('enemy_back', '/images/enemy_back.png');
-    this.load.image('enemy_front', '/images/enemy_front.png');
-    this.load.image('enemy_left', '/images/enemy_left.png');
-    this.load.image('enemy_right', '/images/enemy_right.png');
-    this.load.audio('bgm', '/sounds/TEEMIX.mp3');
+    this.load.image('background', import.meta.env.BASE_URL + 'images/background.jpg');
+    this.load.image('player1', import.meta.env.BASE_URL + 'images/player1.png');
+    this.load.image('player2', import.meta.env.BASE_URL + 'images/player2.png');
+    this.load.image('player3', import.meta.env.BASE_URL + 'images/player3.png');
+    this.load.image('enemy_back', import.meta.env.BASE_URL + 'images/enemy_back.png');
+    this.load.image('enemy_front', import.meta.env.BASE_URL + 'images/enemy_front.png');
+    this.load.image('enemy_left', import.meta.env.BASE_URL + 'images/enemy_left.png');
+    this.load.image('enemy_right', import.meta.env.BASE_URL + 'images/enemy_right.png');
+    this.load.audio('bgm', import.meta.env.BASE_URL + 'sounds/TEEMIX.mp3');
   }
 
   create() {
