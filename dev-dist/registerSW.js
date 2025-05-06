@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/BackdoorTeemo/dev-sw.js?dev-sw', { scope: '/BackdoorTeemo/', type: 'classic' })
