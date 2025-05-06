@@ -28,13 +28,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    const { width, height } = this.scale;
+    const bgFrame = this.textures.get('background').getSourceImage();
+    const originalWidth = bgFrame.width;
+    const originalHeight = bgFrame.height;
+    
     this.moving = false;
     this.isWatching = false;
     this.gameOver = false;
     this.isTransparent = false;
     this.transparentTimer = null;
 
-    this.background = this.add.tileSprite(400, 300, 800, 600, 'background');
+    this.background = this.add.tileSprite(width / 2, height / 2, width, height, 'background');
+    this.background.setTileScale(width / originalWidth, height / originalHeight); 
 
     this.player = createPlayer(this, PLAYER_START_X, PLAYER_START_Y);
 

@@ -6,13 +6,19 @@ import SynopsisScene from './scenes/SynopsisScene.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#000000',
+  width: window.innerWidth,
+  height: window.innerHeight,
   scene: [TitleScene, SynopsisScene, GameScene, ResultScene],
   physics: {
     default: 'arcade',
-    arcade: { debug: false }
+    arcade: {
+      gravity: { y: 0 },
+      debug: false
+    }
+  },
+  scale: {
+    mode: Phaser.Scale.RESIZE,  // ✅ ウィンドウリサイズにも対応
+    autoCenter: Phaser.Scale.CENTER_BOTH
   }
 };
 

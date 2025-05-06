@@ -19,6 +19,7 @@ export const CHARACTER_SCALE = {
 
 export const PLAYER_START_X = 400
 export const PLAYER_START_Y = 500
+
 export const ENEMY_Y = 140
 export const GOAL_DISTANCE = 4000; // プレイヤーがクリアと判定されるスクロール距離
 export const MAX_TIME_MS = 57000;

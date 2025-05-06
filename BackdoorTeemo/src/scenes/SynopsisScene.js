@@ -11,22 +11,26 @@ export default class SynopsisScene extends Phaser.Scene {
   }
 
   create() {
-    const bg = this.add.image(400, 300, 'background_synopsis');
+    const { width, height } = this.scale; // ✅ ここで取得！
+  
+    const bg = this.add.image(width / 2, height / 2, 'background_synopsis');
     bg.setAlpha(0.4);
-
-    const text = this.add.text(100, 100, SYNOPSIS_TEXT, {
+    bg.setDisplaySize(width, height); // ✅ 背景を画面いっぱいに！
+  
+    const text = this.add.text(width * 0.1, height * 0.1, SYNOPSIS_TEXT, {
       fontSize: '20px',
       fill: '#ffffff',
-      wordWrap: { width: 600 }
+      wordWrap: { width: width * 0.8 }
     });
     text.setShadow(2, 2, '#000', 2, false, true);
-
+  
     this.input.once('pointerdown', () => {
       this.scene.start('GameScene');
     });
-
+  
     this.time.delayedCall(7000, () => {
       this.scene.start('GameScene');
     });
   }
+  
 }
