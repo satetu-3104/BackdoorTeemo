@@ -15,9 +15,11 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     this.load.image('background', '/images/background.jpg');
-    this.load.image('walk1', '/images/walk1.png');
-    this.load.image('walk2', '/images/walk2.png');
-    this.load.image('walk3', '/images/walk3.png');
+    this.load.image('player1', '/images/player1.png');
+    this.load.image('player2', '/images/player2.png');
+    this.load.image('player3', '/images/player3.png');
+    
+    
     this.load.image('enemy_back', '/images/enemy_back.png');
     this.load.image('enemy_front', '/images/enemy_front.png');
     this.load.image('enemy_left', '/images/enemy_left.png');

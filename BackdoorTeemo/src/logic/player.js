@@ -1,15 +1,17 @@
+import { CHARACTER_SCALE } from '../config/params.js';
+
 export function createPlayer(scene, x, y) {
-    const player = scene.add.sprite(x, y, 'walk2');
+  const player = scene.add.sprite(x, y, 'player3');
+  player.setScale(CHARACTER_SCALE.player); // ← プレイヤー用スケール！
   
     if (!scene.anims.exists('walk')) {
       scene.anims.create({
         key: 'walk',
         frames: [
-          { key: 'walk1' },
-          { key: 'walk2' },
-          { key: 'walk3' }
+          { key: 'player1' },
+          { key: 'player2' }
         ],
-        frameRate: 8,
+        frameRate: 6,
         repeat: -1
       });
     }
@@ -18,7 +20,7 @@ export function createPlayer(scene, x, y) {
   }
   
   export function updatePlayerAnimation(scene) {
-    if (scene.player) {
+    if (scene.player && scene.anims.exists('walk')) {
       scene.player.play('walk');
     }
   }
@@ -26,7 +28,7 @@ export function createPlayer(scene, x, y) {
   export function stopPlayerAnimation(scene) {
     if (scene.player) {
       scene.player.anims.stop();
-      scene.player.setTexture('walk2');
+      scene.player.setTexture('player3'); // ← 止まったら player3 に切り替え
     }
   }
   
