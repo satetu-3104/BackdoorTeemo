@@ -3,8 +3,9 @@ import { createBackground } from '../logic/background.js';
 import { createPlayer } from '../logic/player.js';
 import { setupPlayerInput } from '../logic/playerEvents.js';
 import { setupGameTimer, checkGameConditions } from '../logic/gameEvents.js';
-import { getPlayerStartPosition, SCROLL_SPEED } from '../config/params.js';
+import { getPlayerStartPosition } from '../config/params.js';
 import { spawnEnemy } from '../logic/enemy.js';
+import { getStartTimestamp } from '../logic/score.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -21,6 +22,7 @@ export default class GameScene extends Phaser.Scene {
     this.gameOver = false;
     this.isTransparent = false;
     this.transparentTimer = null;
+    this.startTimestamp = getStartTimestamp();
 
     this.background = createBackground(this);
 
