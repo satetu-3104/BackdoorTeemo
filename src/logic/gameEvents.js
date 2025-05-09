@@ -1,6 +1,8 @@
 import { SCROLL_SPEED, MAX_TIME_MS, GOAL_DISTANCE } from '../config/params.js';
 import { stopPlayerAnimation } from './player.js';
+import { calculateFinalScore } from './score.js';
 
+const isClear = false; // 👈 CLEAR のときだけ true を渡す
 
 export function setupGameTimer(scene) {
   scene.time.delayedCall(MAX_TIME_MS, () => {
@@ -15,25 +17,39 @@ export function setupGameTimer(scene) {
 }
 
 export function checkGameConditions(scene) {
-  if (scene.moving && !scene.gameOver) {
-    scene.background.tilePositionX += SCROLL_SPEED;
-  }
+    if (scene.moving && !scene.gameOver) {
+      scene.background.tilePositionX += SCROLL_SPEED;
+    }
+  
+    // GAME OVER
+    if (!scene.gameOver && scene.isWatching && !scene.isTransparent) {
+        scene.gameOver = true;
+        stopPlayerAnimation(scene);
+        scene.bgm?.stop(); scene.bgm?.destroy();
 
-  if (!scene.gameOver && scene.isWatching && !scene.isTransparent) {
-    scene.gameOver = true;
-    stopPlayerAnimation(scene);
-    scene.bgm?.stop(); scene.bgm?.destroy();
-    const score = Math.floor(scene.background.tilePositionX);
-    scene.scene.start('ResultScene', { result: 'GAME OVER', score });
-  }
+        const score = calculateFinalScore(
+        scene.background.tilePositionX,
+        scene.startTimestamp,
+        scene.time.now,
+        false // ← ゲームオーバーなので false
+        );
 
-  if (!scene.gameOver && scene.background.tilePositionX >= GOAL_DISTANCE) {
-    scene.gameOver = true;
-    stopPlayerAnimation(scene);
-    scene.bgm?.stop(); scene.bgm?.destroy();
-    const elapsed = scene.time.now;
-    const remaining = Math.max(0, MAX_TIME_MS - elapsed);
-    const score = Math.floor(scene.background.tilePositionX) + Math.floor(remaining);
-    scene.scene.start('ResultScene', { result: 'CLEAR!', score });
+        scene.scene.start('ResultScene', { result: 'GAME OVER', score });
+    }
+
+    // CLEAR
+    if (!scene.gameOver && scene.background.tilePositionX >= GOAL_DISTANCE) {
+        scene.gameOver = true;
+        stopPlayerAnimation(scene);
+        scene.bgm?.stop(); scene.bgm?.destroy();
+
+        const score = calculateFinalScore(
+        scene.background.tilePositionX,
+        scene.startTimestamp,
+        scene.time.now,
+        true // ← クリアなので true
+        );
+
+        scene.scene.start('ResultScene', { result: 'CLEAR!', score });
+    }
   }
-}

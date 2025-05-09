@@ -22,7 +22,7 @@ export default class GameScene extends Phaser.Scene {
     this.gameOver = false;
     this.isTransparent = false;
     this.transparentTimer = null;
-    this.startTimestamp = getStartTimestamp();
+    this.startTimestamp = getStartTimestamp(this);
 
     this.background = createBackground(this);
 
